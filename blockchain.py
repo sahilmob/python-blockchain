@@ -16,11 +16,13 @@ def get_user_input():
 
 
 tx_amount = get_user_input()
-add_value(float(tx_amount))
+add_value(tx_amount)
 
-tx_amount = get_user_input()
-add_value(last_transation=get_last_blockchain_value(),
-          transaction_amount=tx_amount)
 
-tx_amount = get_user_input()
-add_value(tx_amount, get_last_blockchain_value())
+while True:
+    tx_amount = get_user_input()
+    add_value(tx_amount, get_last_blockchain_value())
+
+    for block in blockchain:
+        print("----------")
+        print(block)
