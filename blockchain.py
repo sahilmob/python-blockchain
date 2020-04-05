@@ -3,12 +3,15 @@ blockchain = []
 
 def get_last_blockchain_value():
     """ Returns the last transaction in the blockchain """
+    if len(blockchain) < 1:
+        return None
     return blockchain[-1]
 
 
-def add_value(transaction_amount, last_transation=[1.0]):
+def add_transaction(transaction_amount, last_transation):
+    if last_transation == None:
+        last_transation = [1]
     blockchain.append([last_transation, transaction_amount])
-    print(blockchain)
 
 
 def get_transaction_value():
@@ -27,20 +30,16 @@ def print_blockchain_elements():
         print(block)
 
 
-tx_amount = get_transaction_value()
-add_value(tx_amount)
-
-
 while True:
     print("Please choose: ")
     print("1: Add a new transaction value")
     print("2: Output the blockchain blocks")
-    print("q: quit")
+    print("q: Quit")
     user_choice = get_user_choice()
 
     if user_choice == "1":
         tx_amount = get_transaction_value()
-        add_value(tx_amount, get_last_blockchain_value())
+        add_transaction(tx_amount, get_last_blockchain_value())
     elif user_choice == "2":
         print_blockchain_elements()
     elif user_choice == "q":
