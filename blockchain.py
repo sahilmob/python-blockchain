@@ -20,6 +20,9 @@ def get_balance(participant):
     amount_recivied = 0
     tx_sender = [[tx["amount"] for tx in block["transactions"]
                   if tx["sender"] == participant] for block in blockchain]
+    open_tx_sender = [
+        tx["amount"] for tx in open_transactions if tx["sender"] == participant]
+    tx_sender.append(open_tx_sender)
     tx_recipient = [[tx["amount"] for tx in block["transactions"]
                      if tx["recipient"] == participant] for block in blockchain]
     for tx in tx_sender:
@@ -28,7 +31,7 @@ def get_balance(participant):
     for tx in tx_recipient:
         if(len(tx) > 0):
             amount_recivied += tx[0]
-    return amount_recivied + amount_sent
+    return amount_recivied - amount_sent
 
 
 def get_last_blockchain_value():
@@ -38,15 +41,23 @@ def get_last_blockchain_value():
     return blockchain[-1]
 
 
+def verify_transaction(transaction):
+    sender_balance = get_balance(transaction["sender"])
+    return sender_balance >= transaction["amount"]
+
+
 def add_transaction(recipient, sender=owner, amount=1.0):
     transaction = {
         "sender": sender,
         "recipient": recipient,
         "amount": amount
     }
-    open_transactions.append(transaction)
-    participants.add(sender)
-    participants.add(recipient)
+    if verify_transaction(transaction):
+        open_transactions.append(transaction)
+        participants.add(sender)
+        participants.add(recipient)
+        return True
+    return False
 
 
 def mine_block():
@@ -108,7 +119,10 @@ while waiting_for_input:
 
     if user_choice == "1":
         recipient, amount = get_transaction_value()
-        add_transaction(recipient=recipient, amount=amount)
+        if add_transaction(recipient=recipient, amount=amount):
+            print("Added transaction")
+        else:
+            print("Transaction failed")
         print(open_transactions)
     elif user_choice == "2":
         if mine_block():
