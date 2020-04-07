@@ -1,4 +1,4 @@
-import functools
+from functools import reduce
 
 MINING_REWARD = 10
 
@@ -25,9 +25,9 @@ def get_balance(participant):
     tx_sender.append(open_tx_sender)
     tx_recipient = [[tx["amount"] for tx in block["transactions"]
                      if tx["recipient"] == participant] for block in blockchain]
-    amount_sent = functools.reduce(
+    amount_sent = reduce(
         lambda tx_sum, tx_current: tx_sum + sum(tx_current) if len(tx_current) > 0 else tx_sum + 0, tx_sender, 0)
-    amount_recivied = functools.reduce(
+    amount_recivied = reduce(
         lambda tx_sum, tx_current: tx_sum + sum(tx_current) if len(tx_current) > 0 else tx_sum + 0, tx_recipient, 0)
     return amount_recivied - amount_sent
 
