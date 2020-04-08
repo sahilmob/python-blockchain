@@ -8,4 +8,5 @@ def has_string_265(string):
 
 
 def hash_block(block):
-    return has_string_265(dumps(block, sort_keys=True).encode())
+    hasable_block = block.__dict__.copy()
+    return has_string_265(dumps(hasable_block, sort_keys=True).encode())
