@@ -50,7 +50,7 @@ load_data()
 def save_data():
     try:
         with open("blockchain.txt", mode="w") as f:
-            f.write(dumps(blockchain))
+            f.write(dumps([block.__dict__ for block in blockchain]))
             f.write("\n")
             f.write(dumps(open_transactions))
     except IOError:
@@ -79,7 +79,7 @@ def get_balance(participant):
     open_tx_sender = [
         tx["amount"] for tx in open_transactions if tx["sender"] == participant]
     tx_sender.append(open_tx_sender)
-    tx_recipient = [[tx["amount"] for tx in block.transaction
+    tx_recipient = [[tx["amount"] for tx in block.transactions
                      if tx["recipient"] == participant] for block in blockchain]
     amount_sent = reduce(
         lambda tx_sum, tx_current: tx_sum + sum(tx_current) if len(tx_current) > 0 else tx_sum + 0, tx_sender, 0)
