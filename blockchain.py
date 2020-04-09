@@ -13,14 +13,19 @@ class Blockchain:
     def __init__(self, hosting_node_id):
         genesis_block = Block(0, "", [], 100, 0)
 
-        self.__chain = [genesis_block]
+        self.chain = [genesis_block]
         self.__open_transactions = []
         self.hosting_node_id = hosting_node_id
 
         self.load_data()
 
-    def get_chain(self):
+    @property
+    def chain(self):
         return self.__chain[:]
+
+    @chain.setter
+    def chain(self, val):
+        self.__chain = val
 
     def get_open_transactions(self):
         return self.__open_transactions[:]
@@ -30,7 +35,7 @@ class Blockchain:
             with open("blockchain.txt", mode="r") as f:
                 file_content = f.readlines()
                 blockchain = loads(file_content[0][:-1])
-                self.__chain = [Block(
+                self.chain = [Block(
                     block["index"],
                     block["previous_hash"],
                     [
